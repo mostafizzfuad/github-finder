@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGitHubUser } from "../api/github";
 import UserCard from "./UserCard";
@@ -7,7 +7,13 @@ import RecentSearches from "./RecentSearches";
 const UserSearch = () => {
 	const [username, setUsername] = useState(""); // ইনপুট ফিল্ডের জন্য
 	const [submittedUsername, setSubmittedUsername] = useState(""); // সার্চ ট্রিগার করার জন্য
-	const [recentUsers, setRecentUsers] = useState<string[]>([]);
+
+	const [recentUsers, setRecentUsers] = useState<string[]>(() => {
+		// ১. লোকাল স্টোরেজ থেকে ডেটা খোঁজা
+		const stored = localStorage.getItem("recentUsers");
+		// ২. ডেটা থাকলে পার্স করা, না থাকলে খালি অ্যারে রিটার্ন করা
+		return stored ? JSON.parse(stored) : [];
+	});
 
 	// ডেটা ফেচিং লজিক
 	const { data, isLoading, error } = useQuery({
@@ -41,6 +47,11 @@ const UserSearch = () => {
 			return updated.slice(0, 5); // সর্বোচ্চ ৫টি ইউজার রাখবে
 		});
 	};
+
+	// ৩. স্টেট পরিবর্তন হলেই লোকাল স্টোরেজ আপডেট হবে
+	useEffect(() => {
+		localStorage.setItem("recentUsers", JSON.stringify(recentUsers));
+	}, [recentUsers]);
 
 	return (
 		<>
