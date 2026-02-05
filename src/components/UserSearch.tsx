@@ -19,6 +19,7 @@ const UserSearch = () => {
 
 		// ৩. শর্ত (Enabled): এটি তখনই রান করবে যখন submittedUsername খালি থাকবে না
 		enabled: !!submittedUsername,
+		// staleTime: 1000 * 60 * 5, // (অপশনাল) ৫ মিনিট পর্যন্ত ডেটা ফ্রেশ থাকবে
 	});
 
 	// সাবমিট হ্যান্ডলার
