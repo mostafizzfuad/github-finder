@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce"; // ইমপোর্ট
 import { fetchGitHubUser, searchGitHubUsers } from "../api/github";
-import type { GitHubUser } from "../types";
 import UserCard from "./UserCard";
 import RecentSearches from "./RecentSearches";
+import SuggestionDropdown from "./DropdownSuggestions";
 
 const UserSearch = () => {
 	const [username, setUsername] = useState(""); // ইনপুট ফিল্ডের জন্য
@@ -96,51 +96,75 @@ const UserSearch = () => {
 					{showSuggestions &&
 						suggestions &&
 						suggestions.length > 0 && (
-							<ul className="suggestions">
-								{suggestions
-									.slice(0, 5)
-									.map((user: GitHubUser) => (
-										<li
-											key={user.login} // ID এর বদলে login বা username ইউনিক হিসেবে ভালো
-											onClick={() => {
-												setUsername(user.login);
-												setShowSuggestions(false);
+							<SuggestionDropdown
+								suggestions={suggestions}
+								show={showSuggestions}
+								onSelect={(selected) => {
+									setUsername(selected);
+									setShowSuggestions(false);
+									if (submittedUsername !== selected) {
+										setSubmittedUsername(selected);
+									} else {
+										refetch();
+									}
 
-												// যদি আগের ইউজারই আবার সার্চ করা হয়, তবে ফোর্স রি-ফেচ
-												if (
-													submittedUsername !==
-													user.login
-												) {
-													setSubmittedUsername(
-														user.login,
-													);
-												} else {
-													refetch();
-												}
+									// রিসেন্ট ইউজার আপডেট
+									setRecentUsers((prev) => {
+										const updated = [
+											selected,
+											...prev.filter(
+												(u) => u !== selected,
+											),
+										];
+										return updated.slice(0, 5);
+									});
+								}}
+							/>
+							// <ul className="suggestions">
+							// 	{suggestions
+							// 		.slice(0, 5)
+							// 		.map((user: GitHubUser) => (
+							// 			<li
+							// 				key={user.login} // ID এর বদলে login বা username ইউনিক হিসেবে ভালো
+							// 				onClick={() => {
+							// 					setUsername(user.login);
+							// 					setShowSuggestions(false);
 
-												// রিসেন্ট ইউজার আপডেট
-												setRecentUsers((prev) => {
-													const updated = [
-														user.login,
-														...prev.filter(
-															(u) =>
-																u !==
-																user.login,
-														),
-													];
-													return updated.slice(0, 5);
-												});
-											}}
-										>
-											<img
-												src={user.avatar_url}
-												alt={user.login}
-												className="avatar-xs"
-											/>
-											{user.login}
-										</li>
-									))}
-							</ul>
+							// 					// যদি আগের ইউজারই আবার সার্চ করা হয়, তবে ফোর্স রি-ফেচ
+							// 					if (
+							// 						submittedUsername !==
+							// 						user.login
+							// 					) {
+							// 						setSubmittedUsername(
+							// 							user.login,
+							// 						);
+							// 					} else {
+							// 						refetch();
+							// 					}
+
+							// 					// রিসেন্ট ইউজার আপডেট
+							// 					setRecentUsers((prev) => {
+							// 						const updated = [
+							// 							user.login,
+							// 							...prev.filter(
+							// 								(u) =>
+							// 									u !==
+							// 									user.login,
+							// 							),
+							// 						];
+							// 						return updated.slice(0, 5);
+							// 					});
+							// 				}}
+							// 			>
+							// 				<img
+							// 					src={user.avatar_url}
+							// 					alt={user.login}
+							// 					className="avatar-xs"
+							// 				/>
+							// 				{user.login}
+							// 			</li>
+							// 		))}
+							// </ul>
 						)}
 				</div>
 				<button type="submit">Search</button>
