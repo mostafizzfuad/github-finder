@@ -1,8 +1,10 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { FaGithub, FaUserPlus, FaUserMinus } from "react-icons/fa";
 import type { GitHubUser } from "../types";
 import {
 	followGitHubUser,
+	unfollowGitHubUser,
 	checkIfFollowingUser,
 } from "../api/github";
 
@@ -18,22 +20,31 @@ const UserCard = ({ user }: { user: GitHubUser }) => {
 	const followMutation = useMutation({
 		mutationFn: () => followGitHubUser(user.login),
 		onSuccess: () => {
-			// সফল হলে আমরা UI আপডেট করার জন্য refetch কল করব
-			console.log(`You have followed ${user.login}`);
-			refetch();
+			toast.success(`You have followed ${user.login}`);
+			refetch(); // বাটন আপডেট করার জন্য
 		},
 		onError: (err: any) => {
 			alert(err.message); // আপাতত alert ব্যবহার করছি
 		},
 	});
 
+	// Unfollow Mutation
+	const unfollowMutation = useMutation({
+		mutationFn: () => unfollowGitHubUser(user.login),
+		onSuccess: () => {
+			toast.success(`You have unfollowed ${user.login}`);
+			refetch(); // বাটন আপডেট করার জন্য
+		},
+		onError: (err: any) => {
+			toast.error(err.message);
+		},
+	});
+
 	const handleFollow = () => {
 		if (isFollowing) {
-			// আনফলো লজিক আমরা পরে লিখব
-			console.log("Unfollowing logic coming soon...");
+			unfollowMutation.mutate(); // আনফলো কল
 		} else {
-			// ফলো করা না থাকলে ফলো মিউটেশন কল হবে
-			followMutation.mutate();
+			followMutation.mutate(); // ফলো কল
 		}
 	};
 
@@ -48,7 +59,9 @@ const UserCard = ({ user }: { user: GitHubUser }) => {
 				<button
 					className={`follow-btn ${isFollowing ? "following" : ""}`}
 					onClick={handleFollow} // ক্লিক হ্যান্ডলার
-					disabled={followMutation.isPending} // রিকোয়েস্ট চলাকালীন বাটন ডিজেবল থাকবে
+					disabled={
+						followMutation.isPending || unfollowMutation.isPending
+					} // রিকোয়েস্ট চলাকালীন বাটন ডিজেবল থাকবে
 				>
 					{isFollowing ? (
 						<>
