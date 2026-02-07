@@ -1,73 +1,38 @@
-# React + TypeScript + Vite
+# 🔍 GitHub Finder with TanStack Query
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A powerful GitHub user search application built with **React** and **TanStack Query (React Query)**. This project demonstrates advanced server-state management, data fetching strategies, and real-time interactions using the GitHub REST API.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Based on the implemented modules, the application includes:
 
-## React Compiler
+- **Advanced Data Fetching:** Utilizes `useQuery` to fetch user profiles and repositories efficiently.
+- **Search & Suggestions:** Real-time user search with a suggestions dropdown.
+- **Recent Searches:** Saves search history to **Local Storage** and displays them for quick access.
+- **Performance Optimization:** Implements **Data Prefetching** to load user data before the user even clicks, ensuring instant navigation.
+- **Mutations (Follow/Unfollow):** Allows following or unfollowing users directly from the app using `useMutation` to update server state.
+- **Feedback & Notifications:** Integrated **Toast Notifications** for success/error messages (e.g., "Followed successfully").
+- **DevTools:** Integrated React Query DevTools for debugging and visualizing cache states.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+- **Framework:** React.js
+- **Data Fetching & State:** TanStack Query (React Query)
+- **API:** GitHub REST API
+- **Styling:** CSS
+- **Notifications:** Sooner Toast
+- **Tools:** React Query DevTools
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## ⚙️ Setup & Installation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+To run this project, you will need a GitHub Personal Access Token to increase API rate limits and perform actions like "Follow/Unfollow".
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Clone the Repository
+```bash
+git clone https://github.com/mostafizzfuad/github-finder.git
+cd github-finder
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+# 👨‍💻Author
+[Md. Mostafizur Rahman](https://www.linkedin.com/in/mostafizzfuad/) - Full Stack Developer
